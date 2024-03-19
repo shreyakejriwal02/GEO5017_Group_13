@@ -1,0 +1,4 @@
+Features:
+1. Height: max of z axis value (will differentiate cars and fences from other objects)
+2. Area: (will differentiate poles and small objects like cars and some fences from larger objects like buildings)
+3. PCA?
