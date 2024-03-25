@@ -4,12 +4,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.inspection import permutation_importance
-from sklearn.model_selection import train_test_split, learning_curve
+from sklearn.model_selection import train_test_split
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import f1_score
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
 import seaborn as sns
