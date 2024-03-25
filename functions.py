@@ -236,11 +236,20 @@ def SVM_classifier(x_data, y_data, test_size, kernel='rbf', C=1, max_iter=-1, de
         feat_svm = feature_names[sorted_idx]
         score_svm = feature_importance.importances_mean[sorted_idx]
 
-        # Print feature names and their importance's in a sorted list
-        print("Feature Importance of SVM:")
-        for i in range(len(feat_svm)):
-            print(f"{feat_svm[i]}: {round(score_svm[i],3)}")
-        print()
+        # Create a DataFrame with feature names and their importance scores
+        feature_df = pd.DataFrame({'Feature': feat_svm, 'Importance': score_svm})
+
+        # Sort the DataFrame by importance score
+        feature_df_sorted = feature_df.sort_values(by='Importance', ascending=False)
+
+        # Create a vertical heatmap
+        plt.figure(figsize=(6, 10))  # Adjust the figure size as needed
+        sns.heatmap(feature_df_sorted.set_index('Feature'), cmap='GnBu', annot=True, fmt=".3f", cbar=False)
+        plt.title('Feature Importance of SVM')
+        plt.xlabel('Importance')
+        plt.ylabel('Feature')
+        plt.show()
+
 
     if svm_metrics == True:
         print('svm report: ')
@@ -337,12 +346,25 @@ def RF_classifier(x_data, y_data, test_size, n_estimators=100, criterion='gini',
         feat_rf = feature_names[sorted_idx]
         score_rf = feature_importance.importances_mean[sorted_idx]
 
-        # Print feature names and their importance's in a sorted list
-        print("Feature Importance of RF:")
-        for i in range(len(feat_rf)):
-            print(f"{feat_rf[i]}: {round(score_rf[i],3)}")
-        print()
+        # # Print feature names and their importance's in a sorted list
+        # print("Feature Importance of RF:")
+        # for i in range(len(feat_rf)):
+        #     print(f"{feat_rf[i]}: {round(score_rf[i],3)}")
+        # print()
         
+        # Create a DataFrame with feature names and their importance scores
+        feature_df = pd.DataFrame({'Feature': feat_rf, 'Importance': score_rf})
+
+        # Sort the DataFrame by importance score
+        feature_df_sorted = feature_df.sort_values(by='Importance', ascending=False)
+
+        # Create a vertical heatmap
+        plt.figure(figsize=(6, 10))  # Adjust the figure size as needed
+        sns.heatmap(feature_df_sorted.set_index('Feature'), cmap='GnBu', annot=True, fmt=".3f", cbar=False)
+        plt.title('Feature Importance of RF')
+        plt.xlabel('Importance')
+        plt.ylabel('Feature')
+        plt.show()
         # # Print feature importance
         # importance = classifier.feature_importances_
         # for i, v in enumerate(importance):
@@ -430,7 +452,9 @@ def HyperparameterSVM(X, y, test_size):
                         
     print(f'The best accuracy is {accuracy_max} with:\n C:{best_C}\n kernel:{best_kernel}\n maximum iterations:{best_max_i}\n decision function shape:{best_dec_shape}\n class weights:{best_weight}')
     print(f'The best mean per class accuracy is {mean_accuracy_max} with: \n C:{mbest_C}\n kernel:{mbest_kernel}\n maximum iterations:{mbest_max_i}\n decision function shape:{mbest_dec_shape}\n class weights: {mbest_weight}')
-        
+    parameter_dict = {'C': best_C, 'kernel': best_kernel, 'class_weight': best_weight, 'max_iter': best_max_i, 'decision_func_shape': best_dec_shape}
+    return accuracy_max, parameter_dict
+
 def HyperparameterRF(X, y, test_size):
     n_estimators = [10, 25, 50, 100, 200, 500, 1000]
     criterion = ['gini', 'entropy', 'log_loss']
@@ -461,9 +485,10 @@ def HyperparameterRF(X, y, test_size):
                         rf_mean_accuracy_list.append(mean_accuracy)
     print(f'The best accuracy is {rf_accuracy_max} with:\n number of estimators:{max_n_est}\n criterion:{max_crit}\n maximum features:{max_max_f}\n bootstrap:{max_bootstr}\n maximum samples:{max_max_s}')
     print(f'The best mean per class accuracy is {rf_mean_accuracy_max} with:\n number of estimators:{mmax_n_est}\n criterion:{mmax_crit}\n maximum features:{mmax_max_f}\n bootstrap:{mmax_bootstr}\n maximum samples:{mmax_max_s}')    
-    return rf_accuracy_max
+    parameter_dict = {'n_estimators': max_n_est, 'criterion': max_crit, 'max_features': max_max_f, 'bootstrap': max_bootstr, 'max_samples': max_max_s}
+    return rf_accuracy_max, parameter_dict
 
-def learning_curve_viz(X, y, classifier, train_sizes=np.arange(0.1, 1.0, 0.1)):
+def learning_curve_viz(X, y, classifier, parameter_dict=None, train_sizes=np.arange(0.1, 1.0, 0.1)):
     train_scores = []
     test_scores = []
     
@@ -472,10 +497,28 @@ def learning_curve_viz(X, y, classifier, train_sizes=np.arange(0.1, 1.0, 0.1)):
         test_score = []
         # we might change the range to a higher num to get a smoother curve
         for i in range(50):
-            if classifier == 'SVM':
-                test_acc, mean_accuracy, train_acc = SVM_classifier(X, y, test_size=1-size, random_state=None)
-            if classifier == 'RF':
-                test_acc, mean_accuracy, train_acc = RF_classifier(X, y, test_size=1-size, random_state=None)
+            if parameter_dict == None:
+                if classifier == 'SVM':
+                    test_acc, mean_accuracy, train_acc = SVM_classifier(X, y, test_size=1-size, random_state=None)
+                if classifier == 'RF':
+                    test_acc, mean_accuracy, train_acc = RF_classifier(X, y, test_size=1-size, random_state=None)
+            else:
+                if classifier == 'SVM':
+                    test_acc, mean_accuracy, train_acc = SVM_classifier(X, y, test_size=1-size, 
+                                                                        kernel=parameter_dict['kernel'],
+                                                                         C=parameter_dict['C'],
+                                                                          max_iter=parameter_dict['max_iter'],
+                                                                           class_weight=parameter_dict['class_weight'],
+                                                                            decision_func_shape=parameter_dict['decision_func_shape'],
+                                                                              random_state=None)
+                if classifier == 'RF':
+                    test_acc, mean_accuracy, train_acc = RF_classifier(X, y, test_size=1-size, 
+                                                                       n_estimators=parameter_dict['n_estimators'],
+                                                                        criterion=parameter_dict['criterion'],
+                                                                         max_features=parameter_dict['max_features'],
+                                                                          bootstrap=parameter_dict['bootstrap'],
+                                                                           max_samples=parameter_dict['max_samples'],
+                                                                             random_state=None)
             train_score.append(train_acc)
             test_score.append(test_acc)
         train_scores.append(np.mean(train_score))
@@ -486,5 +529,8 @@ def learning_curve_viz(X, y, classifier, train_sizes=np.arange(0.1, 1.0, 0.1)):
     plt.xlabel('Number of samples in training set')
     plt.ylabel('Accuracy score')
     plt.legend(loc='best')
-    plt.title(f'Learning Curve of {classifier} method')
+    if parameter_dict == None:
+        plt.title(f'Learning Curve of {classifier} method with default settings')
+    else:
+        plt.title(f'Learning Curve of {classifier} method with optimized settings')
     plt.show()
