@@ -455,8 +455,8 @@ def HyperparameterSVM(X, y, test_size):
     return accuracy_max, parameter_dict
 
 def HyperparameterRF(X, y, test_size):
-    n_estimators = [10, 25, 50, 100, 200, 500, 1000]
-    criterion = ['gini', 'entropy', 'log_loss']
+    n_estimators = [10, 25, 50, 100]
+    criterion = ['gini', 'entropy']
     max_features = ['sqrt', 'log2', None]
     bootstrap = [True, False]
     max_samples = [0.1, 0.25, 0.5, 0.75, 1]

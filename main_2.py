@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import functions
+import functions_1
 
 # %%
 # Set path to the current working directory
@@ -48,7 +48,7 @@ def pairplot_features(dataframe):
     plt.show()
 
 # %%
-features = functions.Features(point_cloud)
+features = functions_1.Features(point_cloud)
 df_features = features.df
 
 # %%
@@ -61,8 +61,8 @@ y = df_features['label']
 
 # %%
 # Find out the most important features per classifier
-svm_accuracy, svm_mean_accuracy, svm_train_acc = functions.SVM_classifier(X,y, 0.2, feat_importance=True)
-rf_accuracy, rf_mean_accuracy, rf_train_acc = functions.RF_classifier(X, y, 0.2, feat_importance=True)
+svm_accuracy, svm_mean_accuracy, svm_train_acc = functions_1.SVM_classifier(X,y, 0.2, feat_importance=True)
+rf_accuracy, rf_mean_accuracy, rf_train_acc = functions_1.RF_classifier(X, y, 0.2, feat_importance=True)
 
 # %%
 # Drop the least important features from the training data
@@ -71,13 +71,13 @@ X_updated_rf = df_features.drop(['label', 'average_height', 'projected_bb'], axi
 
 # %%
 # Running the classieifers only with the best 4 features
-b_svm_accuracy, b_svm_mean_accuracy, b_svm_train_acc = functions.SVM_classifier(X_updated_svm,y, 0.2)
-b_rf_accuracy, b_rf_mean_accuracy, b_rf_train_acc = functions.RF_classifier(X_updated_rf, y, 0.2)
+b_svm_accuracy, b_svm_mean_accuracy, b_svm_train_acc = functions_1.SVM_classifier(X_updated_svm,y, 0.2)
+b_rf_accuracy, b_rf_mean_accuracy, b_rf_train_acc = functions_1.RF_classifier(X_updated_rf, y, 0.2)
 
 # %%
 # Hyperparameter tuning of SVM method
-svm_acc_6f, svm_dict_6f = functions.HyperparameterSVM(X, y, 0.2)
-svm_acc_4f, svm_dict_4f = functions.HyperparameterSVM(X_updated_svm, y, 0.2)
+svm_acc_6f, svm_dict_6f = functions_1.HyperparameterSVM(X, y, 0.2)
+svm_acc_4f, svm_dict_4f = functions_1.HyperparameterSVM(X_updated_svm, y, 0.2)
 
 # %%
 # barplot of some experiments with SVM method
@@ -91,8 +91,8 @@ plt.ylabel('Overall accuracy')
 
 # %%
 # Tuning the hyperparameters for Random Forest 
-rf_acc_6f, rf_dict_6f = functions.HyperparameterRF(X, y, 0.2)
-rf_acc_4f, rf_dict_4f = functions.HyperparameterRF(X_updated_rf, y, 0.2)
+rf_acc_6f, rf_dict_6f = functions_1.HyperparameterRF(X, y, 0.2)
+rf_acc_4f, rf_dict_4f = functions_1.HyperparameterRF(X_updated_rf, y, 0.2)
 
 # %%
 # barplot of some experiments with RF method
@@ -106,23 +106,23 @@ plt.ylabel('Overall accuracy')
 
 # %%
 # Learning curves with all features
-functions.learning_curve_viz(X, y, 'SVM')
-functions.learning_curve_viz(X, y, 'RF')
+functions_1.learning_curve_viz(X, y, 'SVM')
+functions_1.learning_curve_viz(X, y, 'RF')
 
 # %%
 # Learning curves with the best 4 features
-functions.learning_curve_viz(X_updated_svm, y, 'SVM')
-functions.learning_curve_viz(X_updated_rf, y, 'RF')
+functions_1.learning_curve_viz(X_updated_svm, y, 'SVM')
+functions_1.learning_curve_viz(X_updated_rf, y, 'RF')
 
 # %%
 # Final results of the classification methods
-final_svm_accuracy, final_svm_mean_accuracy, final_svm_train_acc = functions.SVM_classifier(X, y, 0.4, kernel=svm_dict_6f['kernel'],
+final_svm_accuracy, final_svm_mean_accuracy, final_svm_train_acc = functions_1.SVM_classifier(X, y, 0.4, kernel=svm_dict_6f['kernel'],
                                                                                             C=svm_dict_6f['C'],
                                                                                              max_iter=svm_dict_6f['max_iter'],
                                                                                               decision_func_shape=svm_dict_6f['decision_func_shape'],
                                                                                                class_weight=svm_dict_6f['class_weight'],
                                                                                                  confusion_mat=True)
-final_rf_accuracy, final_rf_mean_accuracy, final_rf_train_acc = functions.RF_classifier(X, y, 0.4, n_estimators=rf_dict_6f['n_estimators'],
+final_rf_accuracy, final_rf_mean_accuracy, final_rf_train_acc = functions_1.RF_classifier(X, y, 0.4, n_estimators=rf_dict_6f['n_estimators'],
                                                                                         criterion=rf_dict_6f['criterion'],
                                                                                          max_features=rf_dict_6f['max_features'],
                                                                                           bootstrap=rf_dict_6f['bootstrap'],
