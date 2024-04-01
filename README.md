@@ -62,21 +62,21 @@ Run the script
 Run the script to extract features and perform classification, get accuracy score and plot the learning curve.
 
 Extracted features:
-    1. Max height of the object
-    2. Ground area covered by the object through a bounding box
-    3. Density of points in reference to bounding box volume
-    4. Projected area ratio of object with the bounding box area
-    5. Average clustering height of points in the object 
-    6. Planarity of the objec
+1. Max height of the object
+2. Ground area covered by the object through a bounding box
+3. Density of points in reference to bounding box volume
+4. Projected area ratio of object with the bounding box area
+5. Average clustering height of points in the object 
+6. Planarity of the objec
 
 Algorithms used:
-    1. Support vector machine
-    2. Random forest
+1. Support vector machine
+2. Random forest
 
 Accuracy tested via:
-    1. Overall accuracy
-    2. Mean per-class accuracy
-    3. Confusion matrix
+1. Overall accuracy
+2. Mean per-class accuracy
+3. Confusion matrix
 
 ## Output
 The script outputs 

@@ -15,7 +15,8 @@ from sklearn.preprocessing import StandardScaler
 import seaborn as sns
 
 # set path to .xyz file location
-data_path = input("file path: ") + "/"  # eg: C:/Users/Dell/Desktop/pointclouds
+
+data_path = input("C:/Users/ppant/Documenten/TU Delft/2024 Q3/GEO5017/GEO5017_Group_13/pointclouds-500/") + '/'    # eg: C:/Users/Dell/Desktop/pointclouds
 # data_path = "E:/Building Technology/Semester 2/Quarter 3/GEO5017_Machine Learning for the Built Environment/Assignment/GEO5017_A2_Group 17/GEO5017_A2_Group 17/GEO5017-A2-Classification/data/pointclouds"
 
 # get a list of all .xyz files in the folder
